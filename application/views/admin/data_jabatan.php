@@ -48,66 +48,74 @@
           </div>
       </nav>
       <!-- Header -->
-      <div class="header bg-primary pb-6">
+      <div class="header bg-primary pb-6 mb-3">
           <div class="container-fluid">
               <div class="header-body">
-                  <button type="button" class="btn btn-success mt-3" data-toggle="modal" data-target="#tambahModal">
-                      Tambah Data
-                  </button>
-                  <?php echo form_open_multipart('admincontroller/importFromExcel'); ?>
-                  <input type="file" name="jabatan" id="jabatan" accept="text/csv">
-                  <button type="submit" name="import">submit</button>
-                  <?php echo form_close(); ?>
+                  <div class="row">
+                      <div class="col-lg-4">
+                          <button type="button" class="btn btn-success mt-3" data-toggle="modal" data-target="#tambahModal">
+                              Tambah Data
+                          </button>
+                      </div>
+                      <div class="col-lg-8 mt-3">
+                          <?php echo form_open_multipart('admincontroller/importFromExcel'); ?>
+                          <input type="file" class="btn btn-outline-white text-dark" name="jabatan" id="jabatan" accept="text/csv">
+                          <button type="submit" name="import" class="btn btn-outline-white">submit</button>
+                          <?php echo form_close(); ?>
+                      </div>
+                  </div>
               </div>
           </div>
       </div>
       <!-- Page content -->
       <div class="container-fluid mt--6">
+
           <div class="row">
               <!-- javascript list -->
               <div class="col-xl-12">
 
                   <div class="card bg-default shadow">
+
                       <div class="card-header bg-transparent border-0">
                           <h3 class="text-white mb-0"><?= $title; ?></h3>
                           <div class="row">
                               <div class="col-lg-2">
-                                  <a href="<?= base_url('Admincontroller/laporanGajiPegawai') ?>" class="btn btn-white mt-3"><i class="text-danger fas fa-file-pdf mr-2"></i>Export to pdf</a>
+                                  <a href="<?= base_url('Admincontroller/cetakLaporanJabatan') ?>" class="btn btn-white mt-3"><i class="text-danger fas fa-file-pdf mr-2"></i>Export to pdf</a>
                               </div>
                               <div class="col-lg-2">
-                                  <form action="<?= base_url('admincontroller/laporanGajiExcel') ?>" method="post">
+                                  <form action="<?= base_url('laporancontroller/index') ?>" method="post">
                                       <button type="submit" class="btn btn-white mt-3"><i class="text-success fas fa-file-excel mr-2"></i>Export to excel</button>
                                   </form>
                               </div>
                           </div>
+
                       </div>
                       <div class="table-responsive">
                           <table class="table align-items-center table-dark table-flush">
                               <thead class="thead-dark">
                                   <tr>
-                                      <th scope="col" class="sort" data-sort="name">N0</th>
-                                      <th scope="col" class="sort" data-sort="budget">ID Pegawai</th>
+                                      <th scope="col" class="sort" data-sort="name">No</th>
+                                      <th scope="col" class="sort" data-sort="budget">ID_Jabatan</th>
+                                      <th scope="col" class="sort" data-sort="status">Nama Jabatan</th>
                                       <th scope="col" class="sort" data-sort="status">Tunjangan</th>
-                                      <th scope="col" class="sort" data-sort="status">Jumlah Lembur</th>
-                                      <th scope="col" class="sort" data-sort="status">Total</th>
                                       <th scope="col" class="sort" data-sort="status">Tindakan</th>
                                   </tr>
                               </thead>
                               <tbody class="list">
-                                  <?php $i = 1; ?>
-                                  <?php foreach ($getAllGaji as $p) : ?>
+                                  <?php $i = 1 ?>
+                                  <?php foreach ($getAllJabatan as $p) : ?>
 
                                       <tr>
                                           <td><?= $i; ?></td>
-                                          <td><?= $p['id_pegawai']; ?></td>
+                                          <td><?= $p['kode_jabatan']; ?></td>
+                                          <td><?= $p['nama_jabatan']; ?></td>
                                           <td><?= $p['tunjangan']; ?></td>
-                                          <td><?= $p['jumlah_lembur']; ?></td>
-                                          <td><?= $p['total']; ?></td>
+
                                           <td>
                                               <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#ubahModal<?= $p['id'] ?>">
                                                   <i class="fas fa-pencil-alt"></i> Ubah Data
                                               </button>
-                                              <a href="<?= base_url('admincontroller/hapusDataGaji/' . $p['id']) ?>" class="btn-sm btn btn-danger">
+                                              <a href="<?= base_url('admincontroller/hapusDataJabatan/' . $p['id']) ?>" class="btn-sm btn btn-danger">
                                                   <i class="fas fa-trash-alt"></i> Hapus</a>
                                           </td>
                                       </tr>
@@ -147,7 +155,6 @@
               <!-- Argon JS -->
               <script src="<?= base_url(); ?>/assets/js/argon.js?v=1.2.0"></script>
           </div>
-
           <!--tambah modal -->
           <div class="modal fade" id="tambahModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
               <div class="modal-dialog">
@@ -159,23 +166,18 @@
                           </button>
                       </div>
                       <div class="modal-body">
-                          <form method="POST" action="<?= base_url('/Admincontroller/tambahdataGaji') ?>">
+                          <form method="POST" action="<?= base_url('/Admincontroller/tambahdatajabatan') ?>">
                               <div class="form-group">
-                                  <label for="kode_pegawai">NAMA PEGAWAI</label>
-                                  <select id="kode_pegawai" name="kode_pegawai" class="form-control">
-                                      <?php foreach ($dataPegawai as $p) : ?>
-                                          <option value="<?= $p['id'] ?>"><?= $p['nama'] ?></option>
-                                      <?php endforeach; ?>
-                                  </select>
+                                  <label for="nip">ID JABATAN</label>
+                                  <input type="text" class="form-control" id="nip" name="nip" placeholder="masukan kode jabatan">
+                              </div>
+                              <div class="form-group">
+                                  <label for="nama">NAMA JABATAN</label>
+                                  <input type="text" class="form-control" id="nama" name="nama" placeholder="masukan nama jabatan">
                               </div>
                               <div class="form-group">
                                   <label for="tunjangan">TUNJANGAN</label>
-                                  <input type="text" class="form-control" id="tunjangan" name="tunjangan" placeholder="masukan tunjangan jabatan">
-                              </div>
-
-                              <div class="form-group">
-                                  <label for="jml_lembur">JUMLAH LEMBUR</label>
-                                  <input type="text" class="form-control" id="jml_lembur" name="jml_lembur" placeholder="masukan jumlah lembur yang diterima">
+                                  <input type="text" class="form-control" id="tunjangan" name="tunjangan" placeholder="masukan tunjangan yang diterima">
                               </div>
                               <div class="form-group">
                                   <button type="submit" class="btn btn-primary">simpan</button>
@@ -186,7 +188,7 @@
               </div>
           </div>
           <!-- ubah data jabatan -->
-          <?php foreach ($getAllGaji as $p) : ?>
+          <?php foreach ($getAllJabatan as $p) : ?>
               <div class="modal fade" id="ubahModal<?= $p['id'] ?>" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="ubahModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
                       <div class="modal-content">
@@ -197,23 +199,22 @@
                               </button>
                           </div>
                           <div class="modal-body">
-                              <form method="POST" action="<?= base_url('/Admincontroller/updateDataGaji/' . $p['id']) ?>">
+                              <form method="POST" action="<?= base_url('/Admincontroller/ubahdatajabatan/' . $p['id']) ?>">
                                   <div class="form-group">
                                       <label for="id">ID</label>
                                       <input type="text" class="form-control" id="id" name="id" placeholder="masukan kode jabatan" value="<?= $p['id'] ?>" readonly>
                                   </div>
                                   <div class="form-group">
-                                      <label for="kode">ID PEGAWAI</label>
-                                      <input type="text" class="form-control" id="kode" name="kode" placeholder="masukan kode jabatan" value="<?= $p['id_pegawai'] ?>" readonly>
+                                      <label for="kode">ID JABATAN</label>
+                                      <input type="text" class="form-control" id="kode" name="kode" placeholder="masukan kode jabatan" value="<?= $p['kode_jabatan'] ?>">
                                   </div>
-
+                                  <div class="form-group">
+                                      <label for="nama">NAMA JABATAN</label>
+                                      <input type="text" class="form-control" id="nama" name="nama" placeholder="masukan nama jabatan" value="<?= $p['nama_jabatan'] ?>">
+                                  </div>
                                   <div class="form-group">
                                       <label for="tunjangan">TUNJANGAN</label>
                                       <input type="text" class="form-control" id="tunjangan" name="tunjangan" placeholder="masukan tunjangan yang diterima" value="<?= $p['tunjangan'] ?>">
-                                  </div>
-                                  <div class="form-group">
-                                      <label for="jml_lembur">JUMLAH LEMBUR</label>
-                                      <input type="text" class="form-control" id="jml_lembur" name="jml_lembur" placeholder="masukan tunjangan yang diterima" value="<?= $p['jumlah_lembur'] ?>">
                                   </div>
                                   <div class="form-group">
                                       <button type="submit" class="btn btn-primary">simpan</button>
